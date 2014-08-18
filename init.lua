@@ -1,0 +1,12 @@
+long_name = "Glutton"
+short_name = "glutton"
+for_module = "tome"
+version = {1,0,4}
+weight = 100
+author = {"desophos"}
+homepage = ""
+description = "Glutton class"
+overload = true
+superload = true
+hooks = true
+data = true
