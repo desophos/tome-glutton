@@ -7,7 +7,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { satiation=1 },
 	activate = function(self, eff)
-		eff.pass = self:addTemporaryValue("can_pass", {pass_wall=1})
+		eff.pass = self:addTemporaryValue("can_pass", {pass_wall=1, pass_tree=1})
 		eff.dig = self:addTemporaryValue("move_project", {[DamageType.EAT_WALLS]=1})
 	end,
 	deactivate = function(self, eff)
@@ -92,6 +92,10 @@ newEffect{
 			"T_MULTIPLY",
 			"T_SHADOW_PHASE_DOOR",
 			"T_SHADOW_BLINDSIDE",
+			"T_DREDGE_FRENZY",
+			-- can't be frenzied
+			"T_FRENZIED_LEAP",
+			"T_FRENZIED_BITE",
 		}
 		for id, talent in pairs(self.talents_def) do
 			if talent.type[1]:find("^base/")
