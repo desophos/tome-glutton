@@ -6,6 +6,7 @@ weight = 100
 author = {"desophos"}
 homepage = "https://github.com/desophos/tome-glutton"
 description = "Glutton class"
+tags = {"class"}
 overload = true
 superload = true
 hooks = true
