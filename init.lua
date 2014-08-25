@@ -1,10 +1,10 @@
 long_name = "Glutton"
 short_name = "glutton"
 for_module = "tome"
-version = {1,0,4}
+version = {1,2,3}
 weight = 100
 author = {"desophos"}
-homepage = ""
+homepage = "https://github.com/desophos/tome-glutton"
 description = "Glutton class"
 overload = true
 superload = true
