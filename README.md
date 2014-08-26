@@ -1,10 +1,3 @@
-TODO:
-- More generics
-- Make Hunger life regen compatible with other addons (?)
+Gluttons are cursed with insatiable Hunger, which they use as a resource. It increases over time, and gives benefits and penalties depending on the current amount they have. They can Devour creatures, which they can then Digest to learn talents that the creature knew. Since they can gain talents, they start with few categories. This is the basic class concept, and I hope you have fun with it. Disclaimer: the Glutton is very unbalanced right now (hence the alpha status). I welcome and encourage any feedback.
 
-CHANGELOG:
-- Voracity now works
-- You can no longer learn Dredge Frenzy, Frenzied Leap, or Frenzied Bite
-- You can now eat trees with Eat Walls
-- Devour messages now display in the correct order
-- Digest no longer falsely claims to grant you stat points
+Thanks to all of #tome for their help. Special thanks to FlarePusher and Draknodred for helping me flesh out the class concept and for developing talent ideas, to natev for a lot of help but especially for letting me build off his resource code, and to Fayd for design ideas, including but not limited to the Pica tree and other forthcoming talent trees.
