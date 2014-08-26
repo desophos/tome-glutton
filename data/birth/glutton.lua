@@ -2,7 +2,7 @@ newBirthDescriptor{
     type = "subclass",
     name = "Glutton",
     desc = {
-        "Gluttons are those whom, through some hedonistic overindulgence, have been cursed to suffer eternally from insatiable hunger.",
+        "Gluttons are those who, through some hedonistic overindulgence, have been cursed to suffer eternally from insatiable hunger.",
         "They wander, attempting in vain to satiate the gnawing sensation within them.",
         "Their Hunger increases constantly, satiated only by Devouring those in their path.",
         "As they hunger more intensely, they become weaker. As their hunger is satiated, their power increases.",
