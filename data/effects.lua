@@ -79,12 +79,9 @@ newEffect{
 
         -- talent gain
 
-        -- talents we shouldn't learn
+        -- specific talents we shouldn't learn
         local talents_to_exclude = {
             "T_TELEKINETIC_GRASP", -- requires Beyond the Flesh
-            -- we can still learn these (if they're not here) for some reason
-            "T_SHOOT",
-            "T_RELOAD",
             -- these are enemy-only
             "T_SUMMON",
             "T_SHRIEK",
@@ -98,11 +95,14 @@ newEffect{
             "T_FRENZIED_BITE",
         }
         for id, talent in pairs(self.talents_def) do
-            if talent.type[1]:find("^base/")
+            if talent.innate = true
+            or talent.hide = true
+            or talent.hide = "always"
+            or talent.type[1]:find("^base/")
             or talent.type[1]:find("^inscriptions/")
             or talent.type[1]:find("^uber/")
             or talent.type[1]:find("^race/")
-            or talent.type[1]:find("^undead/")
+            or talent.type[1]:find("keepsake")
             or talent.type[1]:find("objects")
             or talent.type[1]:find("golemancy")
             or talent.type[1]:find("golem/golem") then
