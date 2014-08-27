@@ -99,3 +99,6 @@ Mousing over CON in the levelup dialog now displays your current and maximum num
 – You can now eat trees with Eat Walls. (thanks to Zonk)
 – Devour messages now display in the correct order.
 – Digest no longer falsely claims to grant you stat points.
+
+0.0.7d:
+– You can no longer learn innate or hidden talents.
