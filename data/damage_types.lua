@@ -76,6 +76,34 @@ newDamageType{
 }
 
 newDamageType{
+    name = "absorb_resources", type = "ABSORB_RESOURCES",
+    projector = function(src, x, y, type, absorb_percent)
+        local target = game.level.map(x, y, Map.ACTOR)
+        if target then
+            local inc = function(actor, res, percent)
+                if actor:knowTalent(actor["T_"..(res):upper().."_POOL"]) then
+                    oldres = actor[res]
+                    actor[res] = actor[res] + ((percent/100) * actor[res])
+                    return math.abs(actor[res] - oldres)
+                else return 0
+                end
+            end
+
+            local resource_shortnames = {"stamina", "mana", "vim", "positive", "negative", "hate", "psi"}
+            local resource_longnames = {"stamina", "mana", "vim", "positive energy", "negative energy", "hate", "psi"}
+
+            for i, resource in ipairs(resource_shortnames) do
+                local amt = inc(target, resource, -absorb_percent)
+                if amt ~= 0 and src:knowTalent(src["T_"..(resource):upper().."_POOL"]) then
+                    game.logSeen(game.player, ("%s absorbed %d of %s's %s!"):format(src.name, amt, target.name, resource_longnames[i]))
+                    src[resource] = src[resource] + amt
+                end
+            end
+        end
+    end
+}
+
+newDamageType{
     name = "salivate", type = "SALIVATE",
     projector = function(src, x, y, type, dam)
         local target = game.level.map(x, y, Map.ACTOR)
@@ -125,12 +153,21 @@ newDamageType{
             if (target.life*100 / target.max_life) > dam.power then
                 game.logSeen(target, "%s resists %s's Devour attempt.", target.name:capitalize(), src.name)
             elseif --[[target:canBe("instakill") and ]]not target:attr("self_resurrect") then
-                local satiation = 5 * target.size_category
+                local DamageType = require "engine.DamageType"
+                local satiation = 2 * target.size_category
+
                 game.logSeen(src, "%s devours %s!", src.name:capitalize(), target.name)
                 src:getTalentFromId(src.T_HUNGER_POOL).customIncHunger(src, -satiation)
+
+                -- "Devouring Enthusiasm" from Gourmand tree
+                if src.devour_resource_gain then
+                    DamageType:get(DamageType.ABSORB_RESOURCES).projector(src, x, y, DamageType.ABSORB_RESOURCES, src.devour_resource_gain)
+                end
+
                 if not src.creatures_devoured then src.creatures_devoured = {} end
-                table.insert(src.creatures_devoured, target)
-                -- dam.dying is a hack for when we call from die()
+                table.insert(src.creatures_devoured, target:clone())
+
+                -- instakill target; dam.dying is a hack for when we call from die()
                 if not target.dead and not dam.dying then target:die(src) end
             else
                 game.logSeen(target, "%s cannot be Devoured!", target.name:capitalize())

@@ -26,6 +26,14 @@ newTalentType {
     description = "Consume inorganic material.",
 }
 
+newTalentType {
+    generic = true,
+    allow_random = false,
+    type = "gluttony/gourmand",
+    name = "gourmand",
+    description = "Turn your affliction to your own advantage.",
+}
+
 lvl_req1 = {
     level = function(level) return 0 + (level-1) end,
 }
@@ -44,3 +52,4 @@ load("/data-glutton/talents/famine.lua")
 load("/data-glutton/talents/digestion.lua")
 load("/data-glutton/talents/feast.lua")
 load("/data-glutton/talents/pica.lua")
+load("/data-glutton/talents/gourmand.lua")

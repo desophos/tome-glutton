@@ -22,9 +22,8 @@ function _M:onStatChange(stat, v)
             self:getTalentFromId(self.T_HUNGER_POOL).onStatChange(self)
         end
 
-        -- make sure these match glutton.lua
-        self.max_talents = math.ceil(self:getCon()/4) -- max number of talents learned from Digestion
-        self.max_total_talent_level = math.ceil(self:getCon()) -- max total level of talents learned from Digestion
+        self:attr("max_talents", v/4) -- max number of talents learned from Digestion
+        self:attr("max_total_talent_level", v) -- max total level of talents learned from Digestion
     end
 end
 

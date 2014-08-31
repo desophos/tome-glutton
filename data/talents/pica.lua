@@ -9,8 +9,9 @@ newTalent{
         return true
     end,
     info = function(self, t)
-        return ([[Allows you to gnaw through walls for %d turns.
-                Each movement through a wall satiates %d Hunger.]]):
+        return ([[
+Allows you to gnaw through walls for %d turns.
+Each movement through a wall satiates %d Hunger.]]):
                 format(math.ceil(self:getTalentLevel(t)), self:getTalentLevel(t))
     end,
 }
@@ -96,8 +97,9 @@ newTalent{
     end,
 
     info = function(self, t)
-        return ([[Hasten a gem's departure through your bowels, removing it from your stomach.
-                Next gem to Excrete: %s]]):
+        return ([[
+Hasten a gem's departure through your bowels, removing it from your stomach.
+Next gem to Excrete: %s]]):
                 format(t.next_gem_to_excrete(self, t))
     end,
 }

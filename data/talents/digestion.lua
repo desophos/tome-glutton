@@ -1,6 +1,7 @@
 newTalent{
     name = "Excrete",
     type = {"base/class", 1},
+    no_energy = true,
     no_unlearn_last = true,
     on_pre_use = function(self, t, silent) if not (self.creatures_devoured and #self.creatures_devoured > 0) then if not silent then game.logPlayer(self, "Your stomach is empty.") end return false end return true end,
 
@@ -22,10 +23,44 @@ newTalent{
     end,
 
     info = function(self, t)
-        return ([[Hasten a creature's departure through your bowels, removing it from your stomach.
-                Next creature to Excrete: %s]]):
+        return ([[
+Hasten a creature's departure through your bowels, removing it from your stomach.
+Next creature to Excrete: %s]]):
                 format(t.next_creature_to_excrete(self, t))
     end,
+}
+
+newTalent{
+    name = "Consume",
+    type = {"base/class", 1},
+    no_unlearn_last = true,
+    on_pre_use = function(self, t, silent) if not (self.creatures_devoured and #self.creatures_devoured > 0) then if not silent then game.logPlayer(self, "Your stomach is empty.") end return false end return true end,
+
+    next_creature_to_consume = function(self, t)
+        if self.creatures_devoured and #self.creatures_devoured > 0 then
+            return self.creatures_devoured[1].name
+        end
+        return "None"
+    end,
+
+    action = function(self, t)
+        if self.creatures_devoured and #self.creatures_devoured > 0 then
+            local c = table.remove(self.creatures_devoured, 1)
+            local satiation = 8 * c.size_category
+            self:getTalentFromId(self.T_HUNGER_POOL).customIncHunger(self, -satiation)
+            game.logSeen(self, ("%s consumed %s to satiate %d hunger."):format(self.name, c.name, satiation))
+            return true
+        end
+        game.logSeen(self, "Your stomach is empty.")
+        return false
+    end,
+
+    info = function(self, t)
+        return ([[
+Quickly digest a creature, removing it from your stomach and satiating hunger based on the creature's size category.
+Next creature to Consume: %s]]):
+                format(t.next_creature_to_consume(self, t))
+    end
 }
 
 newTalent{
@@ -39,10 +74,12 @@ newTalent{
 
     on_learn = function(self, t)
         self:learnTalent(self.T_EXCRETE, true)
+        self:learnTalent(self.T_CONSUME, true)
     end,
 
     on_unlearn = function(self, t)
         self:unlearnTalent(self.T_EXCRETE)
+        self:unlearnTalent(self.T_CONSUME)
     end,
 
     next_creature_to_digest = function(self, t)
@@ -50,6 +87,15 @@ newTalent{
             return self.creatures_devoured[1].name
         end
         return "None"
+    end,
+
+    current_talents = function(self, t)
+        if self.digested_talents == nil or next(self.digested_talents) == nil then return "None" end
+        local t_list = {}
+        for id, level in pairs(self.digested_talents) do
+            table.insert(t_list, self:getTalentFromId(id).name.." L"..level)
+        end
+        return table.concat(t_list, ", ")
     end,
 
     action = function(self, t)
@@ -62,10 +108,14 @@ newTalent{
     end,
 
     info = function(self, t)
-        return ([[Digest a creature you have Devoured to gain permanent bonuses depending on the creature's rank. Takes %d turns.
-                Digesting any creature permanently grants you one of that creature's talents up to the level at which the creature knows the talent, to a maximum of Digest's effective level.
-                Next creature to Digest: %s]]):
-                format(t.cooldown(self, t), t.next_creature_to_digest(self, t))
+        return ([[
+Digest a creature you have Devoured to gain permanent bonuses depending on the creature's rank. Takes %d turns, during which time your hunger is satiated by 0.15 per turn.
+Digesting any creature permanently grants you one of that creature's talents up to the level at which the creature knows the talent, to a maximum of Digest's effective level.
+Next creature to Digest: %s
+
+Current talents learned from Digestion:
+%s]]):
+                format(t.cooldown(self, t), t.next_creature_to_digest(self, t), t.current_talents(self, t))
     end,
 }
 
@@ -129,9 +179,10 @@ newTalent{
 
     info = function(self, t)
         e_rank = t.next_creature_to_catabolize_rank(self, t)
-        return ([[You catalyze your digestive processes, temporarily increasing your rate of digestion so that you immediately digest a Devoured creature.
-                You gain temporary stat bonuses depending on talent level and the creature's rank.
-                Next creature to Catabolize: %s, which will grant you %d of %d stats for %d turns.]]):
+        return ([[
+You catalyze your digestive processes, temporarily increasing your rate of digestion so that you immediately digest a Devoured creature.
+You gain temporary stat bonuses depending on talent level and the creature's rank.
+Next creature to Catabolize: %s, which will grant you %d of %d stats for %d turns.]]):
                 format(
                     t.next_creature_to_catabolize_name(self, t),
                     t.stat_amount(self, t, e_rank),
@@ -185,11 +236,12 @@ newTalent{
     info = function(self, t)
         local t_hunger = self:getTalentFromId(self.T_HUNGER_POOL)
         --Global speed: %f per point above starvation threshold
-        return ([[Increases the bonuses and decreases the penalties of Hunger.
-                You begin starving above %d Hunger.
-                Current Hunger modifiers:
-                Power: %f per point below starvation threshold
-                Life regen: %f per point below starvation threshold]]):
+        return ([[
+Increases the bonuses and decreases the penalties of Hunger.
+You begin starving above %d Hunger.
+Current Hunger modifiers:
+Power: %f per point below starvation threshold
+Life regen: %f per point below starvation threshold]]):
                 format(
                     t_hunger.calculateStarvationThreshold(self),
                     --t_hunger.base_speed_mod + t.speed_mod(self, t),
@@ -284,11 +336,12 @@ newTalent{
     end,
 
     info = function(self, t)
-        return ([[Regurgitate the last creature you devoured.
-                You spit out the creature at a target, doing (%d * the creature's size category) physical damage (scales with CON) to the target and %d acid damage in radius %d.
-                The creature will fight by your side until it decays from your stomach acid.
-                Its stats (scaled to %d%%) and duration (%d turns) increase with talent level.
-                Next creature to Regurgitate: %s]]):
+        return ([[
+Regurgitate the last creature you devoured.
+You spit out the creature at a target, doing (%d * the creature's size category) physical damage (scales with CON) to the target and %d acid damage in radius %d.
+The creature will fight by your side until it decays from your stomach acid.
+Its stats (scaled to %d%%) and duration (%d turns) increase with talent level.
+Next creature to Regurgitate: %s]]):
                 format(
                     t.physical_damage(self, t),
                     t.acid_ball_damage(self, t),

@@ -3,7 +3,7 @@ newTalent{
     type = {"gluttony/famine", 1},
     require = lvl_req1,
     points = 5,
-    cooldown = 0,
+    cooldown = 3,
     range = 1,
     requires_target = true,
     no_npc_use = true,
@@ -58,8 +58,9 @@ newTalent{
     end,
 
     info = function(self, t)
-        return ([[Attack for %.2f damage and attempt to devour the target.
-                If the target is below %d%% life, you kill it automatically and satiate hunger based on the target's size category.]]):
+        return ([[
+Attack for %.2f damage and attempt to devour the target.
+If the target is below %d%% life, you kill it automatically, storing it in your stomach and satiating a small amount of hunger.]]):
                 format(t.damage(self, t), t.power(self, t))
     end,
 }
@@ -104,8 +105,9 @@ newTalent{
     end,
 
     info = function(self, t)
-        return ([[You focus your gnawing hunger on a target, increasing your chance to Devour it by %d%% for %d turns.
-                Your saliva spatters the target, dazing it for %d turns.]]):
+        return ([[
+You focus your gnawing hunger on a target, increasing your chance to Devour it by %d%% for %d turns.
+Your saliva spatters the target, dazing it for %d turns.]]):
                 format(t.devour_bonus(self, t), t.bonus_duration(self, t), t.daze_duration(self, t))
     end,
 }
@@ -137,8 +139,9 @@ newTalent{
     end,
 
     info = function(self, t)
-        return([[You focus on your gnawing appetite, intensifying your hunger and sending you into a voracious frenzy.
-                Your Hunger increases by %d each turn, but you automatically Devour each enemy you kill.]]):
+        return([[
+You focus on your gnawing appetite, intensifying your hunger and sending you into a voracious frenzy.
+Your Hunger increases by %d each turn, but you automatically Devour each enemy you kill.]]):
                 format(t.get_boost(self, t))
     end,
 }
@@ -166,8 +169,9 @@ newTalent{
     end,
 
     info = function(self, t)
-        return([[Drain resources from all those around you in a radius of %d, satiating your own hunger.
-                Drains resources from each creature equal to %d%% of your current Hunger.]]):
+        return([[
+Drain resources from all those around you in a radius of %d, satiating your own hunger.
+Drains resources from each creature equal to %d%% of your current Hunger.]]):
                 format(self:getTalentRadius(t), math.ceil(100*t.drain_percent(self, t)))
     end,
 }

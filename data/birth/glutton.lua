@@ -26,16 +26,16 @@ newBirthDescriptor{
                 end
             end
 
-            -- make sure these match Actor.lua
-            return ([[Current number of Digested talents: %d
+            -- totals are from Actor.lua
+            return ([[
+Current number of Digested talents: %d
 Maximum number of Digested talents: %d
 Current total level of Digested talents: %d
 Maximum total level of Digested talents: %d]]):
             format (num_digested_talents,
-                    math.ceil(actor:getCon()/4),
+                    math.ceil(actor.max_talents),
                     total_talent_level,
-                    math.ceil(actor:getCon())
-                    )
+                    math.ceil(actor.max_total_talent_level))
         end
     end,
     stats = { con=5 },
@@ -44,6 +44,7 @@ Maximum total level of Digested talents: %d]]):
         ["gluttony/digestion"]={true, 0.3},
         ["gluttony/feast"]={true, 0.3},
         ["gluttony/pica"]={true, 0.3},
+        ["gluttony/gourmand"]={true, 0.3},
         ["cursed/endless-hunt"]={true, 0.0},
         ["cursed/predator"]={true, 0.0},
         ["cursed/cursed-form"]={true, 0.0},
@@ -52,6 +53,8 @@ Maximum total level of Digested talents: %d]]):
     talents = {
         T_DEVOUR = 1,
         T_DIGEST = 1,
+        T_UNNATURAL_BODY = 1,
+        T_WEAPON_COMBAT = 1,
     },
     copy = {
         max_life = 120,

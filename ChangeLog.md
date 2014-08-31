@@ -100,5 +100,14 @@ Mousing over CON in the levelup dialog now displays your current and maximum num
 - Devour messages now display in the correct order.
 - Digest no longer falsely claims to grant you stat points.
 
-0.0.7d:
-- You can no longer learn innate or hidden talents.
+0.0.8:
+- Added a new generic tree, Gourmand, with talents that improve your class abilities.
+- Devour now satiates less Hunger.
+- The Digestion effect now grants 0.15 Hunger decay while active.
+- If you reach maximum Hunger, you now automatically use Digest.
+- Excrete is now instant.
+- Added a new talent, Consume, which is similar to Excrete except that it takes a turn and satiates Hunger.
+- Devour now has a 3-turn cooldown.
+- You now start with Unnatural Body and Combat Accuracy in addition to Devour and Digest.
+- You can no longer learn Empty Hand.
+- Digest talent info now lists the talents you've learned from Digestion and their levels.

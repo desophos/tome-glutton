@@ -3,9 +3,10 @@
 newTalent{
     name = "Hunger Pool",
     type = {"base/class", 1},
-    info = [[Allows you to have a hunger pool, which is equal to 100 + CON.
-            As you starve (increasing Hunger), your power and life regen decrease.
-            As you satiate yourself (decreasing Hunger), your power and life regen increase.]],
+    info = [[
+Allows you to have a hunger pool, which is equal to 100 + CON.
+As you starve (increasing Hunger), your power and life regen decrease.
+As you satiate yourself (decreasing Hunger), your power and life regen increase.]],
     mode = "passive",
     hide = "always",
     no_unlearn_last = true,
@@ -65,9 +66,10 @@ newTalent{
     end,
 
     onChangingHunger = function(self)
-    --really our workhorse function, this keeps track of all of our bonuses from Hunger driven passives
-    --and should be called anytime our hunger changes
-    --actor.tmpIds[n] are all being saved properly, should be valid between sessions
+        -- really our workhorse function, this keeps track of all of our bonuses from Hunger driven passives
+        -- and should be called anytime our hunger changes
+        -- actor.tmpIds[n] are all being saved properly, should be valid between sessions
+        
         if not self.tmpIds then self.tmpIds = {} end
 
         local t = self:getTalentFromId(self.T_HUNGER_POOL)
@@ -83,5 +85,10 @@ newTalent{
         self.tmpIds.mind        = self:addTemporaryValue("combat_mindpower",    t.get_mod(self, "power", false))
         self.tmpIds.spell       = self:addTemporaryValue("combat_spellpower",   t.get_mod(self, "power", false))
         self.tmpIds.life_regen  = self:addTemporaryValue("life_regen",          t.get_mod(self, "life_regen", false))
+
+        if self.hunger >= self.max_hunger and self:knowTalent(self.T_DIGEST) then
+            game.logSeen(self, "Protesting your hunger, your stomach begins digesting a creature.")
+            self:forceUseTalent(self.T_DIGEST, {ignore_energy=true, no_confirm=true, silent=true})
+        end
     end,
 }

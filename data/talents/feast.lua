@@ -90,8 +90,9 @@ newTalent{
     end,
 
     info = function(self, t)
-        return ([[Your focus in combat is intensified by your gnawing appetite.
-                This allows you to prey on enemies' temporary weaknesses, granting you a %d%% chance to Devour your targets, but increasing your Hunger by %d with each attack.]]):
+        return ([[
+Your focus in combat is intensified by your gnawing appetite.
+This allows you to prey on enemies' temporary weaknesses, granting you a %d%% chance to Devour your targets, but increasing your Hunger by %d with each attack.]]):
                 format(100*t.chance(self, t), t.cost(self, t))
     end,
 }

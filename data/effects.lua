@@ -28,6 +28,8 @@ newEffect{
 
     activate = function(self, eff)
         eff.digested_creature = table.remove(self.creatures_devoured, 1) -- FIFO
+        -- make sure this matches the description in digestion.lua
+        eff.regen = self:addTemporaryValue("hunger_regen", -0.15)
     end,
 
     deactivate = function(self, eff)
@@ -47,6 +49,7 @@ newEffect{
         end
 
         game.logSeen(self, "%s has been digested.", eff.digested_creature.name:capitalize())
+        self:removeTemporaryValue("hunger_regen", eff.regen)
 
         --[[ removed in 0.0.7
 
@@ -82,6 +85,10 @@ newEffect{
         -- specific talents we shouldn't learn
         local talents_to_exclude = {
             "T_TELEKINETIC_GRASP", -- requires Beyond the Flesh
+            -- these sneak in for some reason even though they're innate...
+            "T_SHOOT",
+            "T_RELOAD",
+            "T_EMPTY_HAND",
             -- these are enemy-only
             "T_SUMMON",
             "T_SHRIEK",
@@ -95,9 +102,8 @@ newEffect{
             "T_FRENZIED_BITE",
         }
         for id, talent in pairs(self.talents_def) do
-            if talent.innate = true
-            or talent.hide = true
-            or talent.hide = "always"
+            if talent.innate == true
+            or talent.hide == "always"
             or talent.type[1]:find("^base/")
             or talent.type[1]:find("^inscriptions/")
             or talent.type[1]:find("^uber/")
